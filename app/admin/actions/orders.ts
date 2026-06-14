@@ -3,18 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/auth";
-
-export const ORDER_STATUSES = [
-  "new",
-  "confirmed",
-  "shipped",
-  "done",
-  "cancelled",
-] as const;
+import { ORDER_STATUSES, type OrderStatus } from "@/lib/order-status";
 
 export async function updateOrderStatus(id: string, status: string) {
   await requireUser();
-  if (!ORDER_STATUSES.includes(status as (typeof ORDER_STATUSES)[number])) {
+  if (!ORDER_STATUSES.includes(status as OrderStatus)) {
     return { error: "Noto'g'ri status" };
   }
   await prisma.order.update({ where: { id }, data: { status } });
