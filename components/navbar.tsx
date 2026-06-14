@@ -1,20 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import {
-  Laptop,
   ShoppingCart,
   Menu,
   ChevronDown,
-  GitCompareArrows,
   Search as SearchIcon,
 } from "lucide-react";
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useCart } from "@/lib/cart-context";
-import { useWishlist } from "@/lib/wishlist-context";
-import { categories } from "@/lib/data/categories";
+import { useCategories, useSettings } from "@/lib/site-data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -38,7 +36,10 @@ import { CategoryIcon } from "@/components/category-icon";
 export function Navbar() {
   const { t, tl } = useLanguage();
   const { cartCount } = useCart();
-  const { wishlistCount } = useWishlist();
+  const categories = useCategories();
+  const settings = useSettings();
+  const logoUrl = settings["logo.url"] || "/logo.png";
+  const siteName = settings["site.name"] || "Compuz";
   const [mobileSearch, setMobileSearch] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -60,8 +61,14 @@ export function Navbar() {
           <SheetContent side="left" className="w-80">
             <SheetHeader>
               <SheetTitle className="flex items-center gap-2">
-                <Laptop className="h-5 w-5 text-primary" />
-                NoutMarket
+                <Image
+                  src={logoUrl}
+                  alt={siteName}
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 rounded object-cover"
+                />
+                {siteName}
               </SheetTitle>
             </SheetHeader>
             <div className="mt-6 flex flex-col gap-1">
@@ -85,11 +92,19 @@ export function Navbar() {
 
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Laptop className="h-5 w-5" />
+          <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-lg">
+            <Image
+              src={logoUrl}
+              alt={siteName}
+              width={44}
+              height={44}
+              className="h-11 w-11 object-cover"
+              priority
+            />
           </span>
           <span className="text-lg font-extrabold tracking-tight">
-            Nout<span className="text-primary">Market</span>
+            {siteName}
+            <span className="text-primary">_</span>
           </span>
         </Link>
 
@@ -139,20 +154,6 @@ export function Navbar() {
           </Button>
 
           <LanguageSwitcher />
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative hidden sm:inline-flex"
-            aria-label={t("nav.compare")}
-          >
-            <GitCompareArrows className="h-5 w-5" />
-            {wishlistCount > 0 && (
-              <Badge className="absolute -right-1 -top-1 h-5 min-w-5 justify-center rounded-full px-1 text-[10px]">
-                {wishlistCount}
-              </Badge>
-            )}
-          </Button>
 
           <Button
             asChild

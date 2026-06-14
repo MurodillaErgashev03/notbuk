@@ -2,12 +2,8 @@
 
 import { Trophy, Sparkles, Flame, Wallet } from "lucide-react";
 
+import type { Product } from "@/lib/types";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import {
-  getTopProducts,
-  getNewProducts,
-  getDiscountedProducts,
-} from "@/lib/data/products";
 import { Hero } from "@/components/home/hero";
 import { CategoryCards } from "@/components/home/category-cards";
 import { UspSection } from "@/components/home/usp-section";
@@ -17,12 +13,18 @@ import { BudgetSection } from "@/components/home/budget-section";
 import { ProductRail } from "@/components/product-rail";
 import { SectionHeading } from "@/components/section-heading";
 
-export default function HomePage() {
+export function HomeContent({
+  top,
+  fresh,
+  sale,
+  budget,
+}: {
+  top: Product[];
+  fresh: Product[];
+  sale: Product[];
+  budget: Product[];
+}) {
   const { t } = useLanguage();
-
-  const top = getTopProducts().slice(0, 8);
-  const fresh = getNewProducts().slice(0, 8);
-  const sale = getDiscountedProducts().slice(0, 8);
 
   return (
     <>
@@ -89,7 +91,7 @@ export default function HomePage() {
             viewAllHref="/category/hamyonbop-noutbuklar"
             viewAllLabel={t("section.viewAll")}
           />
-          <BudgetSection />
+          <BudgetSection products={budget} />
         </section>
       </div>
     </>

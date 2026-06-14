@@ -12,7 +12,7 @@ type Dict = Record<string, Record<Locale, string>>;
 
 export const dict: Dict = {
   // ---- Brand / generic ----
-  "brand.name": { uz: "NoutMarket", ru: "NoutMarket", en: "NoutMarket" },
+  "brand.name": { uz: "Compuz", ru: "Compuz", en: "Compuz" },
   "brand.tagline": {
     uz: "Ishonchli noutbuk do'koni",
     ru: "Надёжный магазин ноутбуков",
@@ -330,9 +330,9 @@ export const dict: Dict = {
   // ---- Footer ----
   "footer.about": { uz: "Biz haqimizda", ru: "О нас", en: "About us" },
   "footer.aboutText": {
-    uz: "NoutMarket — O'zbekistondagi rasmiy noutbuk do'koni. Kafolat va tez yetkazib berish.",
-    ru: "NoutMarket — официальный магазин ноутбуков в Узбекистане. Гарантия и быстрая доставка.",
-    en: "NoutMarket — the official laptop store in Uzbekistan. Warranty and fast delivery.",
+    uz: "Compuz — O'zbekistondagi rasmiy noutbuk do'koni. Kafolat va tez yetkazib berish.",
+    ru: "Compuz — официальный магазин ноутбуков в Узбекистане. Гарантия и быстрая доставка.",
+    en: "Compuz — the official laptop store in Uzbekistan. Warranty and fast delivery.",
   },
   "footer.shop": { uz: "Do'kon", ru: "Магазин", en: "Shop" },
   "footer.info": { uz: "Ma'lumot", ru: "Информация", en: "Information" },
@@ -347,9 +347,9 @@ export const dict: Dict = {
     en: "All rights reserved.",
   },
   "footer.address": {
-    uz: "Toshkent sh., Amir Temur ko'chasi 1",
-    ru: "г. Ташкент, ул. Амира Темура 1",
-    en: "Tashkent, Amir Temur street 1",
+    uz: "Toshkent shahar, Malika savdo kompleksi, A15 do'kon, ko'cha tomoni",
+    ru: "г. Ташкент, ТЦ Малика, магазин A15, со стороны улицы",
+    en: "Tashkent, Malika shopping complex, shop A15, street side",
   },
 
   // ---- Breadcrumb ----

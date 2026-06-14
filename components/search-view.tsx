@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { SearchX } from "lucide-react";
 
+import type { Product } from "@/lib/types";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { searchProducts } from "@/lib/data/products";
 import { ProductBrowser } from "@/components/product-browser";
+import { ProductGridSkeleton } from "@/components/product-card-skeleton";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
 
 const SUGGESTIONS = ["MacBook", "ASUS", "Lenovo", "RTX", "Gaming", "16GB"];
@@ -15,7 +17,27 @@ export function SearchView() {
   const { t } = useLanguage();
   const params = useSearchParams();
   const query = params.get("q") ?? "";
-  const results = searchProducts(query);
+  const [results, setResults] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    fetch(`/api/search?q=${encodeURIComponent(query)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (active) setResults(data.results ?? []);
+      })
+      .catch(() => {
+        if (active) setResults([]);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [query]);
 
   return (
     <div className="container py-6">
@@ -35,7 +57,9 @@ export function SearchView() {
         </h1>
       </div>
 
-      {results.length === 0 ? (
+      {loading ? (
+        <ProductGridSkeleton />
+      ) : results.length === 0 ? (
         <div className="grid place-items-center rounded-2xl border border-dashed py-20 text-center">
           <span className="grid h-16 w-16 place-items-center rounded-full bg-muted">
             <SearchX className="h-8 w-8 text-muted-foreground" />

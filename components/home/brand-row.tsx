@@ -1,10 +1,11 @@
 "use client";
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { BRANDS } from "@/lib/data/products";
+import { useBrands } from "@/lib/site-data";
 
 export function BrandRow() {
   const { t } = useLanguage();
+  const BRANDS = useBrands();
   return (
     <div className="rounded-2xl border bg-muted/40 p-8">
       <p className="mb-6 text-center text-sm font-medium uppercase tracking-wide text-muted-foreground">

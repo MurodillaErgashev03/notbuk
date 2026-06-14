@@ -23,7 +23,7 @@ export function Hero() {
       <div className="container relative grid items-center gap-10 py-14 md:grid-cols-2 md:py-20">
         <div className="space-y-6">
           <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium ring-1 ring-white/20">
-            🇺🇿 NoutMarket
+            🇺🇿 Compuz
           </span>
           <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
             {t("hero.title")}
@@ -73,7 +73,7 @@ export function Hero() {
           <div className="relative mx-auto aspect-[4/3] w-full max-w-md animate-float">
             <div className="absolute inset-0 rounded-2xl bg-white/10 ring-1 ring-white/20 backdrop-blur" />
             <Image
-              src="https://picsum.photos/seed/noutmarket-hero/800/600"
+              src="https://picsum.photos/seed/compuz-hero/800/600"
               alt="Laptop"
               fill
               priority

@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { getProductById, getRelatedProducts, reviews } from "@/lib/data/products";
+import type { Product, Review } from "@/lib/types";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
@@ -35,8 +35,15 @@ import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import { SectionHeading } from "@/components/section-heading";
 import { ProductRail } from "@/components/product-rail";
 
-export function ProductView({ id }: { id: string }) {
-  const product = getProductById(id);
+export function ProductView({
+  product,
+  related,
+  reviews,
+}: {
+  product: Product;
+  related: Product[];
+  reviews: Review[];
+}) {
   const { t, tl, locale } = useLanguage();
   const { addToCart } = useCart();
   const { isWished, toggleWishlist } = useWishlist();
@@ -44,7 +51,6 @@ export function ProductView({ id }: { id: string }) {
 
   if (!product) return null;
 
-  const related = getRelatedProducts(product);
   const wished = isWished(product.id);
 
   const specEntries: [string, string][] = [

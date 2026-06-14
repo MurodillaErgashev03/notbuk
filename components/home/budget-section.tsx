@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import type { Product } from "@/lib/types";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { getBudgetProducts } from "@/lib/data/products";
 import { ProductRail } from "@/components/product-rail";
 import { cn } from "@/lib/utils";
 
@@ -12,11 +12,11 @@ const RANGES: { key: string; min: number; max: number }[] = [
   { key: "budget.8-12", min: 8_000_000, max: 12_000_000 },
 ];
 
-export function BudgetSection() {
+export function BudgetSection({ products }: { products: Product[] }) {
   const { t } = useLanguage();
   const [active, setActive] = useState<number | null>(null);
 
-  const all = getBudgetProducts();
+  const all = products;
   const filtered =
     active === null
       ? all

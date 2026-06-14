@@ -2,18 +2,22 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
-import { Providers } from "@/components/providers";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
+import { Toaster } from "@/components/ui/sonner";
+import { getSettings } from "@/lib/db/queries";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-sans" });
 
-export const metadata: Metadata = {
-  title: "NoutMarket — O'zbekistondagi noutbuk do'koni",
-  description:
-    "NoutMarket — O'zbekistonning eng yaxshi noutbuk do'koni. Kafolat bilan, tez yetkazib berish, 0% bo'lib to'lash.",
-  keywords: ["noutbuk", "laptop", "MacBook", "ASUS", "Lenovo", "Uzbekistan"],
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const name = settings["site.name"] ?? "Compuz";
+  return {
+    title: `${name} — O'zbekistondagi noutbuk do'koni`,
+    description:
+      settings["site.tagline.uz"] ??
+      `${name} — O'zbekistonning eng yaxshi noutbuk do'koni.`,
+    keywords: ["noutbuk", "laptop", "MacBook", "ASUS", "Lenovo", "Uzbekistan"],
+  };
+}
 
 export default function RootLayout({
   children,
@@ -23,13 +27,8 @@ export default function RootLayout({
   return (
     <html lang="uz" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
-        <Providers>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-        </Providers>
+        {children}
+        <Toaster />
       </body>
     </html>
   );

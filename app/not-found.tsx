@@ -13,7 +13,7 @@ export default function NotFound() {
         Sahifa topilmadi / Страница не найдена / Page not found
       </p>
       <Button asChild className="mt-6">
-        <Link href="/">NoutMarket</Link>
+        <Link href="/">Compuz</Link>
       </Button>
     </div>
   );

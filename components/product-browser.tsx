@@ -5,7 +5,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 
 import type { Product } from "@/lib/types";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { BRANDS } from "@/lib/data/products";
+import { useBrands } from "@/lib/site-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -42,6 +42,7 @@ const PAGE_SIZE = 9;
 
 export function ProductBrowser({ products }: { products: Product[] }) {
   const { t } = useLanguage();
+  const allBrands = useBrands();
 
   const [brands, setBrands] = useState<string[]>([]);
   const [ram, setRam] = useState<string[]>([]);
@@ -123,7 +124,7 @@ export function ProductBrowser({ products }: { products: Product[] }) {
       <div className="space-y-3">
         <h3 className="text-sm font-semibold">{t("filter.brand")}</h3>
         <div className="space-y-2">
-          {BRANDS.map((b) => (
+          {allBrands.map((b) => (
             <label
               key={b}
               className="flex cursor-pointer items-center gap-2 text-sm"

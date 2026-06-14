@@ -1,17 +1,20 @@
 "use client";
 
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { getCategory } from "@/lib/data/categories";
-import { getProductsByCategory } from "@/lib/data/products";
+import type { CategoryDef, Product } from "@/lib/types";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
 import { ProductBrowser } from "@/components/product-browser";
 import { CategoryIcon } from "@/components/category-icon";
 import { cn } from "@/lib/utils";
 
-export function CategoryView({ slug }: { slug: string }) {
+export function CategoryView({
+  category,
+  products,
+}: {
+  category: CategoryDef;
+  products: Product[];
+}) {
   const { tl, t } = useLanguage();
-  const category = getCategory(slug);
-  const products = getProductsByCategory(slug);
 
   if (!category) return null;
 

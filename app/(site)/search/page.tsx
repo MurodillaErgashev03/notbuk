@@ -3,7 +3,7 @@ import { SearchView } from "@/components/search-view";
 import { ProductGridSkeleton } from "@/components/product-card-skeleton";
 
 export const metadata = {
-  title: "Qidiruv — NoutMarket",
+  title: "Qidiruv — Compuz",
 };
 
 export default function SearchPage() {

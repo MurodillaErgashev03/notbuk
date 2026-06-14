@@ -5,19 +5,26 @@ import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 import { CartProvider } from "@/lib/cart-context";
 import { WishlistProvider } from "@/lib/wishlist-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/sonner";
+import { SiteDataProvider, type SiteData } from "@/lib/site-data";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({
+  children,
+  siteData,
+}: {
+  children: React.ReactNode;
+  siteData: SiteData;
+}) {
   return (
-    <LanguageProvider>
-      <CartProvider>
-        <WishlistProvider>
-          <TooltipProvider delayDuration={150}>
-            {children}
-            <Toaster />
-          </TooltipProvider>
-        </WishlistProvider>
-      </CartProvider>
-    </LanguageProvider>
+    <SiteDataProvider value={siteData}>
+      <LanguageProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <TooltipProvider delayDuration={150}>
+              {children}
+            </TooltipProvider>
+          </WishlistProvider>
+        </CartProvider>
+      </LanguageProvider>
+    </SiteDataProvider>
   );
 }

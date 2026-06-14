@@ -1,0 +1,95 @@
+// Prisma schema — Compuz e-commerce admin
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Localized text (uz/ru/en) and string arrays are stored as JSON strings
+// (kept as String columns so the existing serialize layer is unchanged).
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String // JSON: { uz, ru, en }
+  description String // JSON: { uz, ru, en }
+  icon        String // lucide icon name
+  gradient    String // tailwind gradient classes
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Product {
+  id              String   @id @default(cuid())
+  name            String
+  brand           String
+  slug            String   @unique
+  price           Int // in UZS
+  originalPrice   Int? // for discounted items
+  discountPercent Int?
+  images          String // JSON: string[]
+  categories      String // JSON: string[] of category slugs
+  specs           String // JSON: ProductSpecs
+  rating          Float    @default(0)
+  reviewCount     Int      @default(0)
+  inStock         Boolean  @default(true)
+  isNew           Boolean  @default(false)
+  isFeatured      Boolean  @default(false)
+  badge           String? // "TOP" | "YANGI" | "CHEGIRMA" | "OMMABOP"
+  description     String // JSON: { uz, ru, en }
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  customerName  String
+  phone         String
+  address       String?
+  note          String?
+  total         Int // in UZS
+  status        String      @default("new") // new | confirmed | shipped | done | cancelled
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+  productId   String
+  productName String
+  price       Int
+  qty         Int
+}
+
+// Singleton table for site-wide settings (logo, name, footer contacts).
+// Stored as key/value so new settings can be added without migrations.
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // bcrypt hash
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

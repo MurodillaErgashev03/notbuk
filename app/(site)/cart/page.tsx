@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -9,6 +10,7 @@ import {
   ShoppingBag,
   ArrowRight,
   ShieldCheck,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -16,8 +18,12 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { useCart } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { PageBreadcrumb } from "@/components/page-breadcrumb";
+import { createOrder } from "@/app/(site)/actions/orders";
 
 export default function CartPage() {
   const { t } = useLanguage();
@@ -31,6 +37,65 @@ export default function CartPage() {
     removeFromCart,
     clearCart,
   } = useCart();
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [note, setNote] = useState("");
+  const [done, setDone] = useState(false);
+  const [pending, start] = useTransition();
+
+  const handleCheckout = () => {
+    if (!name.trim() || !phone.trim()) {
+      toast.error("Ism va telefon raqamini kiriting");
+      return;
+    }
+    const items = cartItems.map(({ product, qty }) => ({
+      productId: product.id,
+      productName: product.name,
+      price: product.price,
+      qty,
+    }));
+    start(async () => {
+      const res = await createOrder({
+        customerName: name.trim(),
+        phone: phone.trim(),
+        address: address.trim() || undefined,
+        note: note.trim() || undefined,
+        items,
+      });
+      if (res?.error) {
+        toast.error(res.error);
+        return;
+      }
+      toast.success("Buyurtmangiz qabul qilindi!");
+      clearCart();
+      setDone(true);
+    });
+  };
+
+  if (done) {
+    return (
+      <div className="container py-6">
+        <PageBreadcrumb items={[{ label: t("cart.title") }]} />
+        <div className="grid place-items-center rounded-2xl border border-dashed py-24 text-center">
+          <span className="grid h-20 w-20 place-items-center rounded-full bg-emerald-50">
+            <CheckCircle2 className="h-10 w-10 text-emerald-600" />
+          </span>
+          <h1 className="mt-5 text-xl font-bold">Buyurtmangiz qabul qilindi!</h1>
+          <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+            Tez orada operatorlarimiz siz bilan bog'lanishadi.
+          </p>
+          <Button asChild className="mt-6" size="lg">
+            <Link href="/category/top-noutbuklar">
+              {t("cart.empty.cta")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (
@@ -198,13 +263,53 @@ export default function CartPage() {
                 {formatPrice(grandTotal)}
               </span>
             </div>
+            <Separator />
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="checkout-name">Ism</Label>
+                <Input
+                  id="checkout-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ismingiz"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="checkout-phone">Telefon</Label>
+                <Input
+                  id="checkout-phone"
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+998 90 123 45 67"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="checkout-address">Manzil</Label>
+                <Textarea
+                  id="checkout-address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Yetkazib berish manzili (ixtiyoriy)"
+                  rows={2}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="checkout-note">Izoh</Label>
+                <Textarea
+                  id="checkout-note"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Qo'shimcha izoh (ixtiyoriy)"
+                  rows={2}
+                />
+              </div>
+            </div>
             <Button
               size="lg"
               className="w-full"
-              onClick={() => {
-                toast.success(t("toast.orderPlaced"));
-                clearCart();
-              }}
+              disabled={pending || cartItems.length === 0}
+              onClick={handleCheckout}
             >
               {t("cart.checkout")}
               <ArrowRight className="h-4 w-4" />

@@ -3,18 +3,19 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { categories } from "@/lib/data/categories";
-import { getProductsByCategory } from "@/lib/data/products";
+import { useCategories, useCategoryCounts } from "@/lib/site-data";
 import { CategoryIcon } from "@/components/category-icon";
 import { cn } from "@/lib/utils";
 
 export function CategoryCards() {
   const { tl, t } = useLanguage();
+  const categories = useCategories();
+  const counts = useCategoryCounts();
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {categories.map((c) => {
-        const count = getProductsByCategory(c.slug).length;
+        const count = counts[c.slug] ?? 0;
         return (
           <Link
             key={c.slug}
